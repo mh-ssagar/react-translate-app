@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Form from './Form2';
+import Form from './Form';
 import Typography from '@mui/material/Typography';
 
 class App extends Component {
@@ -7,8 +7,7 @@ class App extends Component {
     super(props);
     this.state = {
       pastTranslations: [],
-      data: new Map(),
-      translatedText: ""
+      data: new Map()
     };
   }
 
@@ -50,65 +49,22 @@ class App extends Component {
         })
   }
 
-  handleSubmit = (submitted) => {
-    const axios = require('axios').default;   
-    const { v4: uuidv4 } = require('uuid');
-    
-    const url =
-    'https://api.cognitive.microsofttranslator.com'
-    const key = 'a3fca9113839425ba80df984e3950ae1'
-    // console.log(Object.values(this.state.translateText).join())
-    let x = ""
-    if (submitted.trFrom == "1") {
-      submitted.trFrom = ""
-    }
-    console.log(submitted.trFrom)
-    axios({
-        baseURL: url,
-        url: '/translate',
-        method: 'post',
-        headers: {
-            'Ocp-Apim-Subscription-Key': key,
-            'Content-type': 'application/json',
-            'X-ClientTraceId': uuidv4().toString()
-        },
-        params: {
-            'api-version': '3.0',
-            'from': x,
-            'to': submitted.trTo
-        },
-        data: [{
-            'text': submitted.translateText
-        }],
-        responseType: 'json'
-    }).then((response) => {
-    // console.log((response.data));
-    // console.log(this)
-        this.setState({
-            translatedText: response.data["0"]["translations"]["0"]["text"]
-        })
-        console.log(response.data)
-    })
-
-    const url1 = 'http://localhost:7071/api/save/' + submitted.translateText;
-    fetch(url1)
-        .then((result) => {
-            console.log(result)
-        })
-
-    const url2 = 'http://localhost:7071/api/translations/list'
-    fetch(url2)
-        .then((result) => result.json())
-        .then((result) => {
-            this.setState({
-              pastTranslations: result
-            })
-        })        
-  }
-
   render() {
     const {data} = this.state
+    // console.log(data)
+    // console.log(this.state.data.values)
+    
+  // console.log(map)
+  
+        // console.log(typeof(data))
+    // return <div><pre>{JSON.stringify(data, null, 2)}</pre></div>
 
+  //   let translations = data.length > 0
+	// 	&& data.map((item, i) => {
+	// 	return (
+	// 		<option key={i} value={item.id}>{item.name}</option>
+	// 	)
+	// }, this);
 
     if (this.state.pastTranslations.size == 0) {
       console.log("null")
@@ -121,7 +77,7 @@ class App extends Component {
                       Microsoft Translation
           </Typography>
           <div style={{padding:100}}>
-            <Form pastTr={this.state.pastTranslations} handleSubmit={this.handleSubmit} translatedText={this.state.translatedText}/>
+            <Form pastTr={this.state.pastTranslations}/>
           </div>
         </div>
       )
