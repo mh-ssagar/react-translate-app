@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Form from './Form2';
+import Form from './Form';
 import Typography from '@mui/material/Typography';
 
 class App extends Component {
@@ -8,7 +8,7 @@ class App extends Component {
     this.state = {
       pastTranslations: [],
       data: new Map(),
-      translatedText: ""
+      translatedText: "Translation"
     };
   }
 
@@ -59,8 +59,8 @@ class App extends Component {
     const key = 'a3fca9113839425ba80df984e3950ae1'
     // console.log(Object.values(this.state.translateText).join())
     let x = ""
-    if (submitted.trFrom == "1") {
-      submitted.trFrom = ""
+    if (submitted.trFrom !== "1") {
+      x = submitted.trFrom
     }
     console.log(submitted.trFrom)
     axios({
@@ -120,7 +120,7 @@ class App extends Component {
           <Typography variant="h2" component="div" style={{"textAlign": "center", paddingTop:20}}>
                       Microsoft Translation
           </Typography>
-          <div style={{padding:100}}>
+          <div style={{padding:20}}>
             <Form pastTr={this.state.pastTranslations} handleSubmit={this.handleSubmit} translatedText={this.state.translatedText}/>
           </div>
         </div>

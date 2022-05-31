@@ -73,14 +73,14 @@ class Form extends Component {
         // const submitHandler = this.props.handleSubmit
         // this.setState({pastTrLis: this.props.pastTr})
 
-        // console.log(submitHandler)
+        console.log(this.state.translatedText)
         let translationsList = pastTrList.length > 0
 		&& pastTrList.map((item, i) => {
     		return (
 	    		<MenuItem key={i} value={item.trStr}>{item.trStr}</MenuItem>
 		    )
 	    }, this);
-        
+        console.log(this.state.trFrom)
         // for (const [key, value] of this.props.data) {
         //     console.log(key + ' = ' + value)
         // }
@@ -100,10 +100,10 @@ class Form extends Component {
         //   };
 
         return (
-            <Box sx={{ width: '100%', bgcolor:'black' }}>
-                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ width: '100%', bgcolor:'gray' }}>
-                    <form>
-                        <Grid item xs={12} lg={12} xl={12} sx={{bgcolor:'red'}}>
+            <Box sx={{ width: '100%'}}>
+                <Grid container spacing={2} sx={{ width: '100%'}}>
+                    {/* <form> */}
+                        <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                             <InputLabel id="demo-select-small1">From</InputLabel>
                             <Select 
                                 labelId="demo-simple-select-label1"
@@ -224,34 +224,7 @@ class Form extends Component {
                                 <MenuItem value={"zu"}>Zulu</MenuItem>
                             </Select>
                         </Grid>
-                    <br />
-                    <Grid item xs={12} lg={12} sx={{bgcolor:'yellow'}}>
-                        <TextField
-                            id="translateText"
-                            // label="Text to Translate"
-                            placeholder='Enter text'
-                            multiline
-                            rows={6}
-                            onChange={this.handleTextChange}
-                            // defaultValue="Default Value"
-                        />
-                    </Grid>
-                    <Grid item xs={12} lg={6} sx={{bgcolor:'maroon'}}>
-                        <InputLabel id="demo-select-small1">Past searches</InputLabel>
-                        <Select 
-                            labelId="demo-simple-select-label4"
-                            id="demo-simple-select4"
-                            value={this.state.pastTr}
-                            label="Translated-past"
-                            onChange={this.handlePastTrChange}
-                        >
-                            <MenuItem key="-1" value="a">Old queries</MenuItem>
-                            {translationsList}
-                        </Select>
-                    </Grid>
-                    </form>
-                    <Grid item xs={6}>
-                        <Grid item xs={12} lg={6}>
+                        <Grid item xs={12} sm={6} md={6} lg={6} xl={6} >
                             <InputLabel id="demo-select-small2">To</InputLabel>
                             <Select 
                                 labelId="demo-simple-select-label2"
@@ -371,15 +344,38 @@ class Form extends Component {
                                 <MenuItem value={"zu"}>Zulu</MenuItem>
                             </Select>
                         </Grid>
-                        <br />
-                            
-                        <Grid item xs={12} lg={6}>
-                            <Card variant="outlined" style={{height:167}}>{card}</Card>
+                        <Grid item xs={12} sm={6} md={6} lg={6} xl={6} >
+                            <TextField
+                                id="translateText"
+                                // label="Text to Translate"
+                                placeholder='Enter text'
+                                multiline
+                                rows={6}
+                                onChange={this.handleTextChange}
+                                // defaultValue="Default Value"
+                                style={{width:'100%'}}
+                            />
                         </Grid>
-                        {/* <label>{JSON.stringify(this.state.translatedText, null, 2)}</label> */}
+                        <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
+                                <Card variant="outlined" style={{height:167, width:'100%'}}>{card}</Card>
+                        </Grid>
+                        <Grid item xs={12} lg={12}>
+                            <InputLabel id="demo-select-small1">Past searches</InputLabel>
+                            <Select 
+                                labelId="demo-simple-select-label4"
+                                id="demo-simple-select4"
+                                value={this.state.pastTr}
+                                label="Translated-past"
+                                onChange={this.handlePastTrChange}
+                            >
+                                <MenuItem key="-1" value="a">Old queries</MenuItem>
+                                {translationsList}
+                            </Select>
+                        </Grid>
+                    <Grid>
+                        <Button variant="contained" style={{marginTop:10, marginLeft:20}} onClick={this.submitForm}>Translate</Button>
                     </Grid>
                 </Grid>
-                <Button variant="contained" style={{marginTop:20}} onClick={this.submitForm}>Translate</Button>
             </Box>
         );
     }
