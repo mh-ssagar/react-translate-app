@@ -36,7 +36,8 @@ class App extends Component {
     //         }
     //     })
 
-    const url = 'http://localhost:7071/api/translations/list'
+    // const url = 'http://localhost:7071/api/translations/list'
+    const url ='https://ssagarcosmosdbfunc.azurewebsites.net/api/translations/list?'
     fetch(url)
         .then((result) => result.json())
         .then((result) => {
@@ -90,13 +91,15 @@ class App extends Component {
         console.log(response.data)
     })
 
-    const url1 = 'http://localhost:7071/api/save/' + submitted.translateText;
+    // const url1 = 'http://localhost:7071/api/save/' + submitted.translateText;
+    const url1 = 'https://ssagarcosmosdbfunc.azurewebsites.net/api/save/' + submitted.translateText;
     fetch(url1)
         .then((result) => {
             console.log(result)
         })
 
-    const url2 = 'http://localhost:7071/api/translations/list'
+    // const url2 = 'http://localhost:7071/api/translations/list'
+    const url2 = 'https://ssagarcosmosdbfunc.azurewebsites.net/api/translations/list?'
     fetch(url2)
         .then((result) => result.json())
         .then((result) => {
