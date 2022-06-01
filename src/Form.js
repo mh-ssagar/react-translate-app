@@ -42,20 +42,20 @@ class Form extends Component {
     }
 
     handleToChange = (event) => {
-        console.log("To")
-        console.log(event.target.value)
+        // console.log("To")
+        // console.log(event.target.value)
         this.setState({trTo: event.target.value});
       }
     
     handleFromChange = (event) => {
-        console.log("From")
-        console.log(event.target.value)
+        // console.log("From")
+        // console.log(event.target.value)
         this.setState({trFrom: event.target.value});
       }
 
     handlePastTrChange = (event) => {
-        console.log("Past")
-        console.log(event.target.value)
+        // console.log("Past")
+        // console.log(event.target.value)
         // console.log(this.props.trStr.find(item => item.id === event.target.value))
         this.setState({pastTr: event.target.value});
         if(event.target.value !== 'a') {
@@ -80,7 +80,7 @@ class Form extends Component {
         // const submitHandler = this.props.handleSubmit
         // this.setState({pastTrLis: this.props.pastTr})
         
-        console.log(translateText)
+        // console.log(translateText)
         let translationsList = pastTrList.length > 0
 		&& pastTrList.map((item, i) => {
     		return (
@@ -362,7 +362,7 @@ class Form extends Component {
                                 // placeholder='Enter text'
                                 multiline
                                 rows={6}
-                                value={this.props.translateText}
+                                value={this.state.translateText}
                                 onChange={this.handleTextChange}
                                 // defaultValue="Default Value"
                                 ref={(input)=> this.myinput = input}

@@ -114,7 +114,7 @@ class App extends Component {
     if (submitted.trFrom !== "1") {
       x = submitted.trFrom
     }
-    console.log(submitted.trFrom)
+    // console.log(submitted.trFrom)
     axios({
         baseURL: url,
         url: '/translate',
@@ -139,7 +139,7 @@ class App extends Component {
         this.setState({
             translatedText: response.data["0"]["translations"]["0"]["text"]
         })
-        console.log(response.data)
+        // console.log(response.data)
     })
 
     // const url1 = 'http://localhost:7071/api/save/' + submitted.translateText;
