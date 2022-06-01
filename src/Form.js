@@ -10,7 +10,8 @@ import Card from '@mui/material/Card';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
+import IconButton from '@mui/material/IconButton';
+import MicNoneRoundedIcon from '@mui/icons-material/MicNoneRounded';
 
 class Form extends Component {
     state = {
@@ -59,6 +60,8 @@ class Form extends Component {
         this.setState({pastTr: event.target.value});
         if(event.target.value !== 'a') {
             this.setState({translateText:event.target.value})
+            var event = new Event('input', { bubbles: true });
+    this.myinput.dispatchEvent(event);
         }
 
     }
@@ -67,20 +70,24 @@ class Form extends Component {
         this.props.handleSubmit(this.state)   
     }
 
+    startRecord = () => {
+        this.props.s2t()
+    }
+
     render() {
-        const {translateText} = this.state.translateText;
+        const translateText = this.props.translateText;
         const pastTrList = this.props.pastTr
         // const submitHandler = this.props.handleSubmit
         // this.setState({pastTrLis: this.props.pastTr})
-
-        console.log(this.state.translatedText)
+        
+        console.log(translateText)
         let translationsList = pastTrList.length > 0
 		&& pastTrList.map((item, i) => {
     		return (
 	    		<MenuItem key={i} value={item.trStr}>{item.trStr}</MenuItem>
 		    )
 	    }, this);
-        console.log(this.state.trFrom)
+        // console.log(this.state.trFrom)
         // for (const [key, value] of this.props.data) {
         //     console.log(key + ' = ' + value)
         // }
@@ -101,7 +108,7 @@ class Form extends Component {
 
         return (
             <Box sx={{ width: '100%'}}>
-                <Grid container spacing={2} sx={{ width: '100%'}}>
+                <Grid container spacing={{xs: 2, sm: 3, md: 3}} sx={{ width: '100%'}}>
                     {/* <form> */}
                         <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                             <InputLabel id="demo-select-small1">From</InputLabel>
@@ -223,6 +230,10 @@ class Form extends Component {
                                 <MenuItem value={"zh-Hant"}>Chinese Traditional</MenuItem>
                                 <MenuItem value={"zu"}>Zulu</MenuItem>
                             </Select>
+
+                            <IconButton color="primary" aria-label="upload picture" component="span" sx={{float:'right'}} onClick={this.startRecord}>
+                                <MicNoneRoundedIcon />
+                            </IconButton>
                         </Grid>
                         <Grid item xs={12} sm={6} md={6} lg={6} xl={6} >
                             <InputLabel id="demo-select-small2">To</InputLabel>
@@ -348,11 +359,13 @@ class Form extends Component {
                             <TextField
                                 id="translateText"
                                 // label="Text to Translate"
-                                placeholder='Enter text'
+                                // placeholder='Enter text'
                                 multiline
                                 rows={6}
+                                value={this.props.translateText}
                                 onChange={this.handleTextChange}
                                 // defaultValue="Default Value"
+                                ref={(input)=> this.myinput = input}
                                 style={{width:'100%'}}
                             />
                         </Grid>

@@ -1,6 +1,11 @@
 import React, {Component} from 'react'
 import Form from './Form';
 import Typography from '@mui/material/Typography';
+import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
+import MicNoneRoundedIcon from '@mui/icons-material/MicNoneRounded';
+import IconButton from '@mui/material/IconButton';
+
+const speechsdk = require('microsoft-cognitiveservices-speech-sdk')
 
 class App extends Component {
   constructor(props) {
@@ -8,7 +13,8 @@ class App extends Component {
     this.state = {
       pastTranslations: [],
       data: new Map(),
-      translatedText: "Translation"
+      translatedText: "Translation",
+      translateText:"EnterText"
     };
   }
 
@@ -49,6 +55,51 @@ class App extends Component {
               //   console.log(element['trStr'])
               // });
         })
+  }
+
+  async sttFromMic() {
+    const axios = require('axios').default;  
+    // const tokenObj = await getTokenOrRefresh();
+    const headers = { 
+        headers: {
+            'Ocp-Apim-Subscription-Key': 'b59410e65b2745b39b17531c35cc4268',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    };
+
+    try {
+        const tokenResponse = await axios.post(`https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken`, null, headers);
+        // res.send({ token: tokenResponse.data, region: 'eastus' });
+    
+
+    const speechConfig = speechsdk.SpeechConfig.fromAuthorizationToken(tokenResponse.data, "eastus");
+    speechConfig.speechRecognitionLanguage = 'en-US';
+    
+    const audioConfig = speechsdk.AudioConfig.fromDefaultMicrophoneInput();
+    const recognizer = new speechsdk.SpeechRecognizer(speechConfig, audioConfig);
+
+    // this.setState({
+    //     displayText: 'speak into your microphone...'
+    // });
+    console.log('speak into your microphone...')
+    recognizer.recognizeOnceAsync(result => {
+        let displayText;
+        if (result.reason === ResultReason.RecognizedSpeech) {
+            displayText = `RECOGNIZED: Text=${result.text}`
+        console.log('recognized')
+        console.log(result.text)
+        } else {
+            displayText = 'ERROR: Speech was cancelled or could not be recognized. Ensure your microphone is working properly.';
+            console.log('ERROR: Speech was cancelled or could not be recognized. Ensure your microphone is working properly.')
+        }
+        // this.setState({
+        //     displayText: displayText
+        // });
+    });
+    } catch (err) {
+        // res.status(401).send('There was an error authorizing your speech key.');
+        console.log('There was an error authorizing your speech key.')
+    }
   }
 
   handleSubmit = (submitted) => {
@@ -123,8 +174,9 @@ class App extends Component {
           <Typography variant="h2" component="div" style={{"textAlign": "center", paddingTop:20}}>
                       Microsoft Translation
           </Typography>
+          
           <div style={{padding:20}}>
-            <Form pastTr={this.state.pastTranslations} handleSubmit={this.handleSubmit} translatedText={this.state.translatedText}/>
+            <Form pastTr={this.state.pastTranslations} handleSubmit={this.handleSubmit} translatedText={this.state.translatedText} translateText = {this.state.translateText} s2t={this.sttFromMic}/>
           </div>
         </div>
       )
