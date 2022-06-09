@@ -172,13 +172,26 @@ class App extends Component {
     // }
     // else { /* handle case where capability isn't supported */ }
 
-    microsoftTeams.people.selectPeople("Send to", null, false, false).then((res) => {
-      console.log(res[0].email)
+    microsoftTeams.people.selectPeople("Send to", null, false, true).then((res) => {
+      console.log(res);
+      const usr = []
       if(microsoftTeams.chat.isSupported()) {
-        const chatPromise = microsoftTeams.chat.openGroupChat({ users: [res[0].email], message: this.state.translatedText});
-        chatPromise.
-          then((result) => {console.log(result)}).
-          catch((error) => {console.log(error)});
+        if(res.length > 1) {
+          res.forEach(element => {
+            console.log(element.email)
+            usr.push(element.email)
+          });
+          const chatPromise = microsoftTeams.chat.openGroupChat({ users: usr, message: this.state.translatedText});
+          chatPromise.
+            then((result) => {console.log(result)}).
+            catch((error) => {console.log(error)});
+        } else {
+          const chatPromise = microsoftTeams.chat.openGroupChat({ users: [res[0].email], message: this.state.translatedText});
+          chatPromise.
+            then((result) => {console.log(result)}).
+            catch((error) => {console.log(error)});
+        }
+        console.log(usr)
       }
       else { /* handle case where capability isn't supported */ }
     })

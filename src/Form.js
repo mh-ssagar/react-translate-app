@@ -345,7 +345,7 @@ class Form extends Component {
                     <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                             <Card variant="outlined" style={{height:167, width:'100%'}}>{card}</Card>
                     </Grid>
-                    <Grid item xs={12} lg={12}>
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                         <InputLabel id="demo-select-small1">Past searches</InputLabel>
                         <Select 
                             labelId="demo-simple-select-label4"
@@ -358,14 +358,14 @@ class Form extends Component {
                             {translationsList}
                         </Select>
                     </Grid>
-                    <Grid item xs={12} lg={6}>
-                        <Button variant='contained' onClick={this.sendMessage}>
-                            Send
+                    <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
+                        <Button variant="contained" style={{marginTop:10}} onClick={this.submitForm}>
+                            Translate 
                         </Button>
                     </Grid>
-                    <Grid>
-                        <Button variant="contained" style={{marginTop:10, marginLeft:20}} onClick={this.submitForm}>
-                            Translate 
+                    <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
+                        <Button variant='contained' style={{marginTop:10}} onClick={this.sendMessage}>
+                            Send Translation
                         </Button>
                     </Grid>
                 </Grid>
