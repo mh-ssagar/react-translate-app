@@ -52,6 +52,10 @@ class Form extends Component {
         }   
     }
 
+    sendMessage = () => {
+        this.props.sendMessage(this.state)       
+    }
+
     startRecord = () => {
         this.setState({openLangSel:true})
         this.props.s2t(this.state)
@@ -354,8 +358,15 @@ class Form extends Component {
                             {translationsList}
                         </Select>
                     </Grid>
+                    <Grid item xs={12} lg={6}>
+                        <Button variant='contained' onClick={this.sendMessage}>
+                            Send
+                        </Button>
+                    </Grid>
                     <Grid>
-                        <Button variant="contained" style={{marginTop:10, marginLeft:20}} onClick={this.submitForm}>Translate</Button>
+                        <Button variant="contained" style={{marginTop:10, marginLeft:20}} onClick={this.submitForm}>
+                            Translate 
+                        </Button>
                     </Grid>
                 </Grid>
                 <Snackbar open={this.state.openLangSel} autoHideDuration={6000} onClose={() => this.setState({openLangSel:false})}>

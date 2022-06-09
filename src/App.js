@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import Form from './Form';
 import Typography from '@mui/material/Typography';
 import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
+import * as microsoftTeams from "@microsoft/teams-js";
+
 
 const speechsdk = require('microsoft-cognitiveservices-speech-sdk')
 
@@ -19,6 +21,14 @@ class App extends Component {
   }
 
   componentDidMount() {
+    microsoftTeams.app.initialize();
+    microsoftTeams.app.getContext().then((context) => {
+      // this.setState({
+      //   context: context
+      // });
+      console.log("context")
+      console.log(context)
+    });
     // const url = 'https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation'
     // let data = []
     // fetch(url)
@@ -153,6 +163,46 @@ class App extends Component {
         })        
   }
 
+  sendMessage = () => {
+    // if(microsoftTeams.chat.isSupported()) {
+    //   const chatPromise = microsoftTeams.chat.openGroupChat({ users: ["alexw@tltfh.onmicrosoft.com"], topic: "Prep For Meeting Tomorrow", message: "Hi folks kicking off chat about our meeting tomorrow"});
+    //   chatPromise.
+    //     then((result) => {console.log(result)}).
+    //     catch((error) => {console.log(error)});
+    // }
+    // else { /* handle case where capability isn't supported */ }
+
+    microsoftTeams.people.selectPeople("Send to", null, false, false).then((res) => {
+      console.log(res[0].email)
+      if(microsoftTeams.chat.isSupported()) {
+        const chatPromise = microsoftTeams.chat.openGroupChat({ users: [res[0].email], message: this.state.translatedText});
+        chatPromise.
+          then((result) => {console.log(result)}).
+          catch((error) => {console.log(error)});
+      }
+      else { /* handle case where capability isn't supported */ }
+    })
+
+//     microsoftTeams.people.selectPeople((error: microsoftTeams.SdkError, people: microsoftTeams.people.PeoplePickerResult[]) => 
+//  {
+//     if (error) 
+//     {
+//         if (error.message) 
+//            {
+//              alert(" ErrorCode: " + error.errorCode + error.message);
+//            }
+//             else 
+//             {
+//               alert(" ErrorCode: " + error.errorCode);
+//             }
+//       }
+//     if (people)
+//      {
+//             console.log(" People length: " + people.length + " " + JSON.stringify(people));
+//       }
+//   },{ setSelected: ["aad id"], openOrgWideSearchInChatOrChannel: true, singleSelect: false});
+  }
+
   render() {
     if (this.state.pastTranslations.size === 0) {
       console.log("null")
@@ -166,7 +216,7 @@ class App extends Component {
           </Typography>
           
           <div style={{padding:20}}>
-            <Form pastTr={this.state.pastTranslations} handleSubmit={this.handleSubmit} translatedText={this.state.translatedText} translateText = {this.state.translateText} s2t={this.sttFromMic} handleTranslateToChange={this.handleTranslateToChange}/>
+            <Form pastTr={this.state.pastTranslations} handleSubmit={this.handleSubmit} translatedText={this.state.translatedText} translateText = {this.state.translateText} s2t={this.sttFromMic} handleTranslateToChange={this.handleTranslateToChange} sendMessage={this.sendMessage} />
           </div>
         </div>
       )
