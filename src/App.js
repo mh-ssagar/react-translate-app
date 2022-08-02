@@ -109,58 +109,91 @@ class App extends Component {
   }
 
   handleSubmit = (submitted) => {
+    // see if it's a request to change language
     const axios = require('axios').default;   
     const { v4: uuidv4 } = require('uuid');
     
-    const url =
-    'https://api.cognitive.microsofttranslator.com'
-    const key = 'a3fca9113839425ba80df984e3950ae1'
+    const url0 =
+    'https://eastus.api.cognitive.microsoft.com/luis/prediction/v3.0/apps/e308c509-8b2b-43f6-9bfd-23b37d77396f/slots/production/predict?verbose=true&show-all-intents=true&log=true&subscription-key=4c9f40b9a3f246b1ae0c2ec4fabd6eaf&query='
     // console.log(Object.values(this.state.translateText).join())
-    let x = ""
-    if (submitted.trFrom !== "1") {
-      x = submitted.trFrom
-    }
+    
     console.log(this.state.translateText)
     axios({
-        baseURL: url,
-        url: '/translate',
-        method: 'post',
-        headers: {
-            'Ocp-Apim-Subscription-Key': key,
-            'Content-type': 'application/json',
-            'X-ClientTraceId': uuidv4().toString()
-        },
-        params: {
-            'api-version': '3.0',
-            'from': x,
-            'to': submitted.trTo
-        },
-        data: [{
-            'text': this.state.translateText
-        }],
-        responseType: 'json'
+        baseURL: url0,
+        url: "\"" + this.state.translateText + "\"",
+        method: 'get',
     }).then((response) => {
-        this.setState({
-            translatedText: response.data["0"]["translations"]["0"]["text"]
-        })
+      console.log(response["data"]["prediction"])
+      if(response["data"]["prediction"]["topIntent"] != "None") {
+        if(response["data"]["prediction"]["topIntent"] == "ChangeTo") {
+          console.log(response["data"]["prediction"]["entities"]["languageslist"]["0"][0])
+          this.setState({
+            tra: response["data"]["prediction"]["entities"]["languageslist"]["0"][0]
+          })
+        }
+      }
+    }).catch((error) => {
+      console.log(error)
     })
 
-    // const url1 = 'http://localhost:7071/api/save/' + submitted.translateText;
-    const url1 = 'https://ssagarcosmosdbfunc.azurewebsites.net/api/save/' + this.state.translateText;
-    fetch(url1)
-        .then((result) => {
-            // console.log(result)
-        })
+    // translate ********
+    // const axios = require('axios').default;   
+    // const { v4: uuidv4 } = require('uuid');
+    
+    // const url =
+    // 'https://api.cognitive.microsofttranslator.com'
+    // const key = 'f8e5163f872349a9ad853f134da57b92'
+    // // console.log(Object.values(this.state.translateText).join())
+    // let x = ""
+    // if (submitted.trFrom !== "1") {
+    //   x = submitted.trFrom
+    // }
+    // console.log(this.state.translateText)
+    // axios({
+    //     baseURL: url,
+    //     url: '/translate',
+    //     method: 'post',
+    //     headers: {
+    //         'Ocp-Apim-Subscription-Key': key,
+    //         'Ocp-Apim-Subscription-Region': "eastus",
+    //         'Content-type': 'application/json',
+    //         'X-ClientTraceId': uuidv4().toString()
+    //     },
+    //     params: {
+    //         'api-version': '3.0',
+    //         'from': x,
+    //         'to': submitted.trTo
+    //     },
+    //     data: [{
+    //         'text': this.state.translateText
+    //     }],
+    //     responseType: 'json'
+    // }).then((response) => {
+    //     this.setState({
+    //         translatedText: response.data["0"]["translations"]["0"]["text"]
+    //     })
+    // }).catch((error) => {
+    //   console.log(error)
+    // })
+    
+    // ****************
 
-    // const url2 = 'http://localhost:7071/api/translations/list'
-    const url2 = 'https://ssagarcosmosdbfunc.azurewebsites.net/api/translations/list?'
-    fetch(url2)
-        .then((result) => result.json())
-        .then((result) => {
-            this.setState({
-              pastTranslations: result
-            })
-        })        
+    // const url1 = 'http://localhost:7071/api/save/' + submitted.translateText;
+    // const url1 = 'https://ssagarcosmosdbfunc.azurewebsites.net/api/save/' + this.state.translateText;
+    // fetch(url1)
+    //     .then((result) => {
+    //         // console.log(result)
+    //     })
+
+    // // const url2 = 'http://localhost:7071/api/translations/list'
+    // const url2 = 'https://ssagarcosmosdbfunc.azurewebsites.net/api/translations/list?'
+    // fetch(url2)
+    //     .then((result) => result.json())
+    //     .then((result) => {
+    //         this.setState({
+    //           pastTranslations: result
+    //         })
+    //     })        
   }
 
   sendMessage = () => {
