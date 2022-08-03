@@ -28,10 +28,6 @@ class Form extends Component {
     handleTextChange = (event) => {
        this.props.handleTranslateToChange(event.target.value)
     }
-
-    handleToChange = (event) => {
-        this.setState({trTo: event.target.value});
-    }
     
     handleFromChange = (event) => {
         this.setState({trFrom: event.target.value});
@@ -56,13 +52,18 @@ class Form extends Component {
         this.props.sendMessage(this.state)       
     }
 
+    changeTranslateTo = () => {
+        this.setState({trTo:this.props.trTo})
+    }
+
     startRecord = () => {
         this.setState({openLangSel:true})
         this.props.s2t(this.state)
     }
 
     render() {
-        const pastTrList = this.props.pastTr
+        console.log(this.props.trTo)
+        const pastTrList = this.props.pastTr;
         let translationsList = pastTrList.length > 0
 		&& pastTrList.map((item, i) => {
     		return (
@@ -213,9 +214,10 @@ class Form extends Component {
                         <Select 
                             labelId="demo-simple-select-label2"
                             id="demo-simple-select2"
-                            value={this.state.trTo}
+                            // value={trTo ? trTo : this.state.trTo}
+                            value={this.props.trTo}
                             label="Translate-to"
-                            onChange={this.handleToChange}
+                            onChange={this.props.handleToChange}
                             >
                             <MenuItem value={"af"}>Afrikaans</MenuItem>
                             <MenuItem value={"am"}>Amharic</MenuItem>

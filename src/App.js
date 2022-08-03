@@ -11,6 +11,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      trTo:"en",
       pastTranslations: [],
       data: new Map(),
       translatedText: "Translation",
@@ -124,13 +125,50 @@ class App extends Component {
         method: 'get',
     }).then((response) => {
       console.log(response["data"]["prediction"])
-      if(response["data"]["prediction"]["topIntent"] != "None") {
-        if(response["data"]["prediction"]["topIntent"] == "ChangeTo") {
+      if(response["data"]["prediction"]["topIntent"] !== "None") {
+        if(response["data"]["prediction"]["topIntent"] === "ChangeTo") {
           console.log(response["data"]["prediction"]["entities"]["languageslist"]["0"][0])
           this.setState({
-            tra: response["data"]["prediction"]["entities"]["languageslist"]["0"][0]
+            trTo: response["data"]["prediction"]["entities"]["languageslist"]["0"][0]
           })
         }
+      }
+      else {
+        const url =
+        'https://api.cognitive.microsofttranslator.com'
+        const key = 'f8e5163f872349a9ad853f134da57b92'
+        // console.log(Object.values(this.state.translateText).join())
+        let x = ""
+        if (submitted.trFrom !== "1") {
+          x = submitted.trFrom
+        }
+        console.log(this.state.translateText)
+        axios({
+            baseURL: url,
+            url: '/translate',
+            method: 'post',
+            headers: {
+                'Ocp-Apim-Subscription-Key': key,
+                'Ocp-Apim-Subscription-Region': "eastus",
+                'Content-type': 'application/json',
+                'X-ClientTraceId': uuidv4().toString()
+            },
+            params: {
+                'api-version': '3.0',
+                'from': x,
+                'to': this.state.trTo
+            },
+            data: [{
+                'text': this.state.translateText
+            }],
+            responseType: 'json'
+        }).then((response) => {
+            this.setState({
+                translatedText: response.data["0"]["translations"]["0"]["text"]
+            })
+        }).catch((error) => {
+          console.log(error)
+        })
       }
     }).catch((error) => {
       console.log(error)
@@ -140,41 +178,7 @@ class App extends Component {
     // const axios = require('axios').default;   
     // const { v4: uuidv4 } = require('uuid');
     
-    // const url =
-    // 'https://api.cognitive.microsofttranslator.com'
-    // const key = 'f8e5163f872349a9ad853f134da57b92'
-    // // console.log(Object.values(this.state.translateText).join())
-    // let x = ""
-    // if (submitted.trFrom !== "1") {
-    //   x = submitted.trFrom
-    // }
-    // console.log(this.state.translateText)
-    // axios({
-    //     baseURL: url,
-    //     url: '/translate',
-    //     method: 'post',
-    //     headers: {
-    //         'Ocp-Apim-Subscription-Key': key,
-    //         'Ocp-Apim-Subscription-Region': "eastus",
-    //         'Content-type': 'application/json',
-    //         'X-ClientTraceId': uuidv4().toString()
-    //     },
-    //     params: {
-    //         'api-version': '3.0',
-    //         'from': x,
-    //         'to': submitted.trTo
-    //     },
-    //     data: [{
-    //         'text': this.state.translateText
-    //     }],
-    //     responseType: 'json'
-    // }).then((response) => {
-    //     this.setState({
-    //         translatedText: response.data["0"]["translations"]["0"]["text"]
-    //     })
-    // }).catch((error) => {
-    //   console.log(error)
-    // })
+    
     
     // ****************
 
@@ -249,6 +253,10 @@ class App extends Component {
 //   },{ setSelected: ["aad id"], openOrgWideSearchInChatOrChannel: true, singleSelect: false});
   }
 
+  handleTrToChange = (event) => {
+    this.setState({trTo: event.target.value});
+}
+
   render() {
     if (this.state.pastTranslations.size === 0) {
       console.log("null")
@@ -262,7 +270,15 @@ class App extends Component {
           </Typography>
           
           <div style={{padding:20}}>
-            <Form pastTr={this.state.pastTranslations} handleSubmit={this.handleSubmit} translatedText={this.state.translatedText} translateText = {this.state.translateText} s2t={this.sttFromMic} handleTranslateToChange={this.handleTranslateToChange} sendMessage={this.sendMessage} />
+            <Form pastTr={this.state.pastTranslations} 
+            handleSubmit={this.handleSubmit} 
+            translatedText={this.state.translatedText} 
+            trTo = {this.state.trTo}
+            handleTrToChange = {this.handleTrToChange} 
+            translateText = {this.state.translateText} 
+            s2t={this.sttFromMic} 
+            handleTranslateToChange={this.handleTranslateToChange} 
+            sendMessage={this.sendMessage} />
           </div>
         </div>
       )
